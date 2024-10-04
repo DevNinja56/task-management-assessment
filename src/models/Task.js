@@ -9,7 +9,6 @@ const taskSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     assignedUsers: [
       {
@@ -27,7 +26,10 @@ const taskSchema = new mongoose.Schema(
       enum: ["low", "medium", "high", "urgent"],
       default: "medium",
     },
-    dueDate: {
+    startDate: {
+      type: Date,
+    },
+    endDate: {
       type: Date,
     },
     createdBy: {
@@ -35,12 +37,9 @@ const taskSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    completedAt: {
-      type: Date,
-    },
   },
   { timestamps: true }
 );
 
-const Task = mongoose.model("Task", taskSchema);
+const Task = mongoose.models.Task || mongoose.model("Task", taskSchema);
 export default Task;
