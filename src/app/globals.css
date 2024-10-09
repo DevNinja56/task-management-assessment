@@ -1,27 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.lexend-deca-font {
+  font-family: "Lexend Deca", sans-serif;
+}
+
+.roboto-font {
+  font-family: "Roboto", system-ui;
+}
+
+.animate-auth-image {
+  animation: authImage 10s ease-in-out infinite;
+}
+
+@keyframes authImage {
+  0% {
+    left: -183px;
+  }
+  50% {
+    left: -88px;
+  }
+  100% {
+    left: -183px;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.button-animation::after {
+  content: "";
+  background: #fff;
+  height: 155px;
+  left: -75px;
+  opacity: 0.2;
+  position: absolute;
+  top: -50px;
+  transform: rotate(35deg);
+  transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+  width: 50px;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.button-animation:hover::after {
+  left: 120%;
+  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@media screen and (min-width: 1530px) {
+  @keyframes authImage {
+    0% {
+      left: -380px;
+    }
+    50% {
+      left: -320px;
+    }
+    100% {
+      left: -380px;
+    }
   }
 }

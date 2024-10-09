@@ -1,5 +1,7 @@
 import { SessionProvider } from "next-auth/react";
 import { useEffect } from "react";
+import "@/app/globals.css";
+import MainLayout from "@/layout";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   useEffect(() => {
@@ -10,10 +12,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 
     initializeSocketServer();
   }, []);
+  const componentLayout = Component.layout;
 
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <MainLayout {...componentLayout}>
+        <Component {...pageProps} />
+      </MainLayout>
     </SessionProvider>
   );
 }
