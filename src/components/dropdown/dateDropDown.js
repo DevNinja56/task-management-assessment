@@ -4,11 +4,21 @@ import Button from "@/components/common/button";
 import DateIcon from "@/components/icon/dateIcon";
 import { Calendar } from "primereact/calendar";
 
-const DateDropDown = () => {
+const DateDropDown = ({ onSelectDate }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
 
   const [showCalendar, setShowCalendar] = useState("startDate");
+
+  const handleDateChange = (date, type) => {
+    if (type === "startDate") {
+      setStartDate(date);
+      onSelectDate({ startDate: date, endDate }); // Pass the selected startDate
+    } else {
+      setEndDate(date);
+      onSelectDate({ startDate, endDate: date }); // Pass the selected endDate
+    }
+  };
 
   return (
     <motion.div
@@ -48,13 +58,13 @@ const DateDropDown = () => {
         {showCalendar === "startDate" ? (
           <Calendar
             value={startDate}
-            onChange={(e) => setStartDate(e.value)}
+            onChange={(e) => handleDateChange(e.value, "startDate")}
             inline
           />
         ) : (
           <Calendar
             value={endDate}
-            onChange={(e) => setEndDate(e.value)}
+            onChange={(e) => handleDateChange(e.value, "endDate")}
             inline
           />
         )}

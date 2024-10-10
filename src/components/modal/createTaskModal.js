@@ -9,9 +9,15 @@ import AssignDropDown from "../dropdown/assignDropDown";
 import DateDropDown from "../dropdown/dateDropDown";
 import PriorityDropDown from "../dropdown/priorityDropDown";
 import { useUi } from "@/hooks/useUserInterface";
+import axios from "axios";
 
 const CreateTaskModal = () => {
   const { hideModal } = useUi();
+  const [taskName, setTaskName] = useState("");
+  const [assignedUsers, setAssignedUsers] = useState([]);
+  const [dueDate, setDueDate] = useState(null);
+  const [priority, setPriority] = useState("");
+
   const [showAssignDropdown, setShowAssignDropdown] = useState(false);
   const [showDateDropdown, setShowDateDropdown] = useState(false);
   const [showPriorityDropdown, setShowPriorityDropdown] = useState(false);
@@ -50,6 +56,22 @@ const CreateTaskModal = () => {
     };
   }, []);
 
+  const createTask = async () => {
+    try {
+      const taskData = {
+        name: taskName,
+        assignedUsers,
+        dueDate,
+        priority,
+      };
+
+      await axios.post("/api/tasks", taskData);
+      hideModal();
+    } catch (error) {
+      console.error("Error creating task", error);
+    }
+  };
+
   return (
     <div className="h-screen w-screen grid place-items-center overflow-auto">
       <div
@@ -74,6 +96,8 @@ const CreateTaskModal = () => {
               <ClipBoardIcon />
             </div>
             <textarea
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
               className="w-full rounded-md min-h-36 bg-lightBlue/15 pt-1.5 pl-9 pr-2.5 text-lightBlue lexend-deca-font outline-none font-light resize-none text-sm md:text-base"
               placeholder="Add description"
             />
@@ -100,7 +124,9 @@ const CreateTaskModal = () => {
                 color="lightBlue"
                 icon={<User />}
               />
-              {showAssignDropdown && <AssignDropDown />}
+              {showAssignDropdown && (
+                <AssignDropDown onSelect={(users) => setAssignedUsers(users)} />
+              )}
             </div>
             <div
               ref={dateDropdownRef}
@@ -120,7 +146,9 @@ const CreateTaskModal = () => {
                 color="lightBlue"
                 icon={<CalendarIcon />}
               />
-              {showDateDropdown && <DateDropDown />}
+              {showDateDropdown && (
+                <DateDropDown onSelectDate={(date) => setDueDate(date)} />
+              )}
             </div>
             <div
               ref={priorityDropdownRef}
@@ -140,7 +168,11 @@ const CreateTaskModal = () => {
                 color="lightBlue"
                 icon={<FlagIcon />}
               />
-              {showPriorityDropdown && <PriorityDropDown />}
+              {showPriorityDropdown && (
+                <PriorityDropDown
+                  onSelectPriority={(priority) => setPriority(priority)}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -153,6 +185,7 @@ const CreateTaskModal = () => {
             className="lexend-deca-font font-light text-xs md:text-sm"
             text="Create Task"
             animation
+            onClick={createTask}
           />
         </div>
       </div>

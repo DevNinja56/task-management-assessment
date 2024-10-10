@@ -3,7 +3,10 @@ import { motion } from "framer-motion";
 import FlagIcon from "../icon/flagIcon";
 import { MdBlock } from "react-icons/md";
 
-const PriorityDropDown = () => {
+const PriorityDropDown = ({ onSelectPriority }) => {
+  const handlePrioritySelect = (priority) => {
+    onSelectPriority(priority);
+  };
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -13,19 +16,31 @@ const PriorityDropDown = () => {
       onClick={(e) => e.stopPropagation()}
     >
       <div className="p-2.5 pb-0 w-full">
-        <div className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300">
+        <div
+          onClick={() => handlePrioritySelect("Urgent")}
+          className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
+        >
           <FlagIcon color="red" />
           Urgent
         </div>
-        <div className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300">
+        <div
+          onClick={() => handlePrioritySelect("High")}
+          className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
+        >
           <FlagIcon color="yellow" />
           High
         </div>
-        <div className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300">
+        <div
+          onClick={() => handlePrioritySelect("Normal")}
+          className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
+        >
           <FlagIcon color="#0283FB" />
           Normal
         </div>
-        <div className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300">
+        <div
+          onClick={() => handlePrioritySelect("Low")}
+          className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
+        >
           <FlagIcon color="#5A6A85" />
           Low
         </div>

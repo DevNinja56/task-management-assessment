@@ -7,9 +7,9 @@ export async function middleware(req) {
 
   const { pathname } = req.nextUrl;
 
-  // if (!token && pathname.startsWith(ROUTES.DASHBOARD)) {
-  //   return NextResponse.redirect(new URL(ROUTES.SIGN_IN, req.url));
-  // }
+  if (!token && pathname.startsWith(ROUTES.DASHBOARD)) {
+    return NextResponse.redirect(new URL(ROUTES.SIGN_IN, req.url));
+  }
 
   return NextResponse.next();
 }
