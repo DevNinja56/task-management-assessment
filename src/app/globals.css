@@ -117,3 +117,7 @@
 .notification-scroll::-webkit-scrollbar-thumb {
   background: #d9d9d9;
 }
+
+body::-webkit-scrollbar {
+  display: none;
+}

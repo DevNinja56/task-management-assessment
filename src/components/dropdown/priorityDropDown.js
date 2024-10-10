@@ -18,7 +18,7 @@ const PriorityDropDown = () => {
           Urgent
         </div>
         <div className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300">
-          <FlagIcon color="#FBBC05" />
+          <FlagIcon color="yellow" />
           High
         </div>
         <div className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300">

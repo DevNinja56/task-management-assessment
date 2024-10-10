@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import io from "socket.io-client";
+import BoardContainer from "@/components/pages/dashboard/boardContainer";
 
 let socket;
 
@@ -141,128 +142,131 @@ function Dashboard() {
   // if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h1>Dashboard</h1>
+    // <div>
+    //   <h1>Dashboard</h1>
 
-      {/* Notifications Section */}
-      <div>
-        <h2>Notifications</h2>
-        <ul>
-          {notifications.length === 0 ? (
-            <li>No notifications</li>
-          ) : (
-            notifications.map((notification, index) => (
-              <li key={index}>
-                {notification.message} (Task ID: {notification.taskId})
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
+    //   {/* Notifications Section */}
+    //   <div>
+    //     <h2>Notifications</h2>
+    //     <ul>
+    //       {notifications.length === 0 ? (
+    //         <li>No notifications</li>
+    //       ) : (
+    //         notifications.map((notification, index) => (
+    //           <li key={index}>
+    //             {notification.message} (Task ID: {notification.taskId})
+    //           </li>
+    //         ))
+    //       )}
+    //     </ul>
+    //   </div>
 
-      {/* Task Creation Form (Admin Only) */}
-      {isAdmin && (
-        <div>
-          <h2>Create New Task</h2>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <div>
-              <label>Title</label>
-              <input
-                type="text"
-                name="title"
-                value={newTask.title}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label>Description</label>
-              <textarea
-                name="description"
-                value={newTask.description}
-                onChange={handleInputChange}
-              ></textarea>
-            </div>
-            <div>
-              <label>Priority</label>
-              <select
-                name="priority"
-                value={newTask.priority}
-                onChange={handleInputChange}
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="urgent">Urgent</option>
-              </select>
-            </div>
-            <div>
-              <label>Assign Users</label>
-              <select
-                multiple
-                name="assignedUsers"
-                value={newTask.assignedUsers}
-                onChange={handleUserChange}
-              >
-                {users.map((user) => (
-                  <option key={user._id} value={user._id}>
-                    {user.name} ({user.email})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button type="button" onClick={handleTaskCreate}>
-              Create Task
-            </button>
-          </form>
-        </div>
-      )}
+    //   {/* Task Creation Form (Admin Only) */}
+    //   {isAdmin && (
+    //     <div>
+    //       <h2>Create New Task</h2>
+    //       <form onSubmit={(e) => e.preventDefault()}>
+    //         <div>
+    //           <label>Title</label>
+    //           <input
+    //             type="text"
+    //             name="title"
+    //             value={newTask.title}
+    //             onChange={handleInputChange}
+    //           />
+    //         </div>
+    //         <div>
+    //           <label>Description</label>
+    //           <textarea
+    //             name="description"
+    //             value={newTask.description}
+    //             onChange={handleInputChange}
+    //           ></textarea>
+    //         </div>
+    //         <div>
+    //           <label>Priority</label>
+    //           <select
+    //             name="priority"
+    //             value={newTask.priority}
+    //             onChange={handleInputChange}
+    //           >
+    //             <option value="low">Low</option>
+    //             <option value="medium">Medium</option>
+    //             <option value="high">High</option>
+    //             <option value="urgent">Urgent</option>
+    //           </select>
+    //         </div>
+    //         <div>
+    //           <label>Assign Users</label>
+    //           <select
+    //             multiple
+    //             name="assignedUsers"
+    //             value={newTask.assignedUsers}
+    //             onChange={handleUserChange}
+    //           >
+    //             {users.map((user) => (
+    //               <option key={user._id} value={user._id}>
+    //                 {user.name} ({user.email})
+    //               </option>
+    //             ))}
+    //           </select>
+    //         </div>
+    //         <button type="button" onClick={handleTaskCreate}>
+    //           Create Task
+    //         </button>
+    //       </form>
+    //     </div>
+    //   )}
 
-      {/* Task List */}
-      <h2>Tasks</h2>
-      <ul>
-        {tasks.length === 0 ? (
-          <li>No tasks assigned</li>
-        ) : (
-          tasks.map((task) => (
-            <li key={task._id}>
-              <h3>{task.title}</h3>
-              <p>{task.description}</p>
-              <p>Status: {task.status}</p>
-              <p>Priority: {task.priority}</p>
-              <p>
-                Assigned Users:{" "}
-                {task.assignedUsers.map((u) => u.name).join(", ")}
-              </p>
+    //   {/* Task List */}
+    //   <h2>Tasks</h2>
+    //   <ul>
+    //     {tasks.length === 0 ? (
+    //       <li>No tasks assigned</li>
+    //     ) : (
+    //       tasks.map((task) => (
+    //         <li key={task._id}>
+    //           <h3>{task.title}</h3>
+    //           <p>{task.description}</p>
+    //           <p>Status: {task.status}</p>
+    //           <p>Priority: {task.priority}</p>
+    //           <p>
+    //             Assigned Users:{" "}
+    //             {task.assignedUsers.map((u) => u.name).join(", ")}
+    //           </p>
 
-              {isAdmin ? (
-                <div>
-                  <button
-                    onClick={() =>
-                      handleTaskUpdate(task._id, { status: "development" })
-                    }
-                  >
-                    Move to Development
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleTaskUpdate(task._id, { priority: "high" })
-                    }
-                  >
-                    Set High Priority
-                  </button>
-                  <button onClick={() => handleTaskDelete(task._id)}>
-                    Delete Task
-                  </button>
-                </div>
-              ) : (
-                <button onClick={() => handleTaskDelete(task._id)}>
-                  Delete Task
-                </button>
-              )}
-            </li>
-          ))
-        )}
-      </ul>
+    //           {isAdmin ? (
+    //             <div>
+    //               <button
+    //                 onClick={() =>
+    //                   handleTaskUpdate(task._id, { status: "development" })
+    //                 }
+    //               >
+    //                 Move to Development
+    //               </button>
+    //               <button
+    //                 onClick={() =>
+    //                   handleTaskUpdate(task._id, { priority: "high" })
+    //                 }
+    //               >
+    //                 Set High Priority
+    //               </button>
+    //               <button onClick={() => handleTaskDelete(task._id)}>
+    //                 Delete Task
+    //               </button>
+    //             </div>
+    //           ) : (
+    //             <button onClick={() => handleTaskDelete(task._id)}>
+    //               Delete Task
+    //             </button>
+    //           )}
+    //         </li>
+    //       ))
+    //     )}
+    //   </ul>
+    // </div>
+    <div className="px-12 py-9 flex gap-4 w-full overflow-x-auto h-screen notification-scroll">
+      <BoardContainer boardName="To do" />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/layout/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
@@ -13,6 +14,7 @@ module.exports = {
         gray: "#919CA7",
         lightBlue: "#5A6A85",
         lightBlack: "#3A3A3A",
+        yellow: "#FBBC05",
       },
     },
   },

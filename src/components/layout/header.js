@@ -16,7 +16,7 @@ const Header = () => {
 
   return (
     <div
-      className={`bg-white flex flex-wrap md:flex-nowrap gap-5 justify-between shadow-md py-7 md:py-6 xl:px-12 md:px-6 lg:px-8 px-2 items-center z-40`}
+      className={`bg-white flex flex-wrap md:flex-nowrap gap-5 justify-between py-7 md:py-6 xl:px-12 md:px-6 lg:px-8 px-2 items-center z-40 sticky top-0`}
     >
       <div className="flex gap-3 items-center">
         <h1 className="capitalize md:text-2xl text-xl font-medium text-black lexend-deca-font">

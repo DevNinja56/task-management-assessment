@@ -8,12 +8,10 @@ import { GoChevronRight } from "react-icons/go";
 import { HiBars3 } from "react-icons/hi2";
 import { motion } from "framer-motion";
 
-const SideBar = () => {
+const SideBar = ({ isFullWidth, setIsFullWidth }) => {
   const { pathname } = useRouter();
-  const [isFullWidth, setIsFullWidth] = useState(true);
   const [showSideBar, setShowSideBar] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
-  const [isClient, setIsClient] = useState(false); // New state to track client-side rendering
 
   const isActive = (path) => path === pathname;
 
@@ -29,7 +27,6 @@ const SideBar = () => {
     handleResize();
 
     window.addEventListener("resize", handleResize);
-    setIsClient(true); // Set client-side rendering to true
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -50,8 +47,8 @@ const SideBar = () => {
         minWidth: getSidebarWidth(),
       }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
-      className={`admin-sidebar bg-primary shadow-inner flex flex-col h-screen pb-8 fixed lg:relative transition-all duration-300 ${
-        showSideBar ? "left-0 lg:left-auto" : "-left-[98px] lg:left-auto"
+      className={`admin-sidebar bg-primary shadow-inner flex flex-col pb-8 transition-all duration-300 fixed lg:top-0 lg:left-0 h-full ${
+        showSideBar ? "left-0 lg:left-auto" : "-left-[101px] lg:left-auto"
       } z-50`}
     >
       <div
@@ -77,7 +74,7 @@ const SideBar = () => {
       <div
         className={`flex items-center ${
           isFullWidth ? "pl-6" : "px-6"
-        } gap-2 py-7 sticky top-0 border-b border-white/20 transition-all duration-300`}
+        } gap-2 py-7 border-b border-white/20 transition-all duration-300`}
       >
         <Link
           href={ROUTES.DASHBOARD}
