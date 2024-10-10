@@ -51,42 +51,6 @@ export default async function handler(req, res) {
         res.status(500).json({ message: "Error creating task" });
       }
       break;
-
-    case "PUT":
-      try {
-        const { id } = req.query;
-        if (!id)
-          return res.status(400).json({ message: "Task ID is required" });
-
-        const task = await Task.findById(id);
-        if (!task) return res.status(404).json({ message: "Task not found" });
-
-        // Only admin or the creator of the task can edit it
-        if (!isAdmin && task.createdBy.toString() !== user.id) {
-          return res.status(403).json({ message: "Forbidden" });
-        }
-
-        // Update task with the provided data
-        const updatedTask = await Task.findByIdAndUpdate(
-          id,
-          { $set: req.body },
-          { new: true, runValidators: true }
-        );
-
-        sendNotification(
-          updatedTask._id,
-          updatedTask.assignedUsers,
-          `${user.name} updated a task`
-        );
-
-        res.status(200).json(updatedTask);
-      } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "Error updating task" });
-      }
-      break;
-
-    case "DELETE":
       try {
         const { id } = req.query;
         if (!id)
