@@ -21,7 +21,7 @@ const Button = ({
 }) => {
   const baseStyles = `${radius || "rounded-md"} ${
     padding || "px-5 py-2.5"
-  } disabled:cursor-not-allowed flex gap-2 justify-center items-center font-semibold group transition-all duration-300 relative ${
+  } disabled:cursor-not-allowed flex gap-2 justify-center items-center group transition-all duration-300 relative ${
     animation && "button-animation"
   }  overflow-hidden`;
 

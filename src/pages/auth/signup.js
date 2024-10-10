@@ -98,10 +98,10 @@ export default function SignUp() {
             text="Sign Up"
             padding="py-3 lg:py-4"
             radius="rounded-[51px]"
-            className="w-full text-sm lg:text-base"
+            className="w-full text-sm lg:text-base font-extrabold"
             animation
           />
-          <p className="text-sm text-secondary">Or</p>
+          {/* <p className="text-sm text-secondary">Or</p>
           <div className="flex items-center gap-3 w-full">
             <Button
               radius="rounded-[30px]"
@@ -130,7 +130,7 @@ export default function SignUp() {
                 />
               }
             />
-          </div>
+          </div> */}
           <h1
             onClick={() => router.push(ROUTES.SIGN_IN)}
             className="text-sm roboto-font text-gray cursor-pointer lg:mt-6"
