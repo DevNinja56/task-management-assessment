@@ -56,12 +56,15 @@ const CreateTaskModal = () => {
     };
   }, []);
 
+  console.log(dueDate, "dueDate");
+
   const createTask = async () => {
     try {
       const taskData = {
         name: taskName,
         assignedUsers,
-        dueDate,
+        startDate: dueDate.startDate,
+        endDate: dueDate.endDate,
         priority,
       };
 

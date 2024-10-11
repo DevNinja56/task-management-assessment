@@ -3,28 +3,33 @@ import { motion } from "framer-motion";
 import { CiSearch } from "react-icons/ci";
 import Image from "next/image";
 import axios from "axios";
+import LoaderSpinner from "../common/loaderSpinner";
 
 const AssignDropDown = ({ onSelect }) => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         const response = await axios.get("/api/users");
-        setUsers(response.data.data);
+        if (response && response.status === 200) {
+          setUsers(response.data.data);
+        }
       } catch (error) {
         console.error("Failed to fetch users", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUsers();
   }, []);
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const toggleUserSelection = (user) => {
@@ -54,27 +59,33 @@ const AssignDropDown = ({ onSelect }) => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      <div className="px-2.5 pt-4 pb-5 flex flex-col gap-2.5 w-full">
-        {filteredUsers.map((user) => (
-          <div
-            key={"user--" + user._id}
-            onClick={() => toggleUserSelection(user)} // Toggle user selection
-            className={`bg-lightBlue/15 px-2.5 py-1.5 flex items-center gap-1.5 w-full rounded-md relative group cursor-pointer ${
-              selectedUsers.includes(user._id) ? "bg-lightBlue/25" : ""
-            }`} // Highlight selected
-          >
-            <Image
-              height={26}
-              width={26}
-              src="/images/default-user.png"
-              className="border border-white rounded-full h-5 w-5 md:h-auto md:w-auto"
-              alt="assign-user-image"
-            />
-            <h2 className="font-light text-xs md:text-sm lexend-deca-font text-lightBlue">
-              {user.name}
-            </h2>
-          </div>
-        ))}
+      <div className="px-2.5 pt-4 pb-5 flex flex-col gap-2.5 w-full items-center">
+        {loading ? (
+          <LoaderSpinner color="text-primary" />
+        ) : filteredUsers && filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={"user--" + user._id}
+              onClick={() => toggleUserSelection(user)}
+              className={`bg-lightBlue/15 px-2.5 py-1.5 flex items-center gap-1.5 w-full rounded-md relative group cursor-pointer ${
+                selectedUsers.includes(user._id) ? "bg-lightBlue/25" : ""
+              }`}
+            >
+              <Image
+                height={26}
+                width={26}
+                src="/images/default-user.png"
+                className="border border-white rounded-full h-5 w-5 md:h-auto md:w-auto"
+                alt="assign-user-image"
+              />
+              <h2 className="font-light text-xs md:text-sm lexend-deca-font text-lightBlue">
+                {user.name}
+              </h2>
+            </div>
+          ))
+        ) : (
+          "User Not Found"
+        )}
       </div>
     </motion.div>
   );

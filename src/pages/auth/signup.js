@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Image from "next/image";
 import Logo from "@/components/icon/logo";
-import { GrFacebookOption } from "react-icons/gr";
 import { ROUTES } from "@/config/routes";
 import Button from "@/components/common/button";
 import Input from "@/components/common/input";
@@ -15,9 +14,11 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await axios.post("/api/auth/signup", {
@@ -27,10 +28,13 @@ export default function SignUp() {
       });
 
       if (res.status === 201) {
+        setLoading(false);
+
         // Redirect to sign-in page after successful registration
         router.push("/auth/signin");
       }
     } catch (error) {
+      setLoading(false);
       setError(error.response?.data?.message || "Something went wrong");
     }
   };
@@ -99,38 +103,10 @@ export default function SignUp() {
             padding="py-3 lg:py-4"
             radius="rounded-[51px]"
             className="w-full text-sm lg:text-base font-extrabold"
+            isLoader={loading}
+            disabled={loading}
             animation
           />
-          {/* <p className="text-sm text-secondary">Or</p>
-          <div className="flex items-center gap-3 w-full">
-            <Button
-              radius="rounded-[30px]"
-              padding="py-3 lg:py-4"
-              text="Facebook"
-              buttonColor="white"
-              color="secondary"
-              className="border border-primary/20 w-full text-sm lg:text-base"
-              icon={
-                <GrFacebookOption className="text-xl text-blue-800 min-w-fit" />
-              }
-            />
-            <Button
-              radius="rounded-[30px]"
-              padding="py-3 lg:py-4"
-              text="Google"
-              buttonColor="white"
-              color="secondary"
-              className="border border-primary/20 w-full text-sm lg:text-base"
-              image={
-                <Image
-                  height={20}
-                  width={20}
-                  alt="google"
-                  src="/images/Google.svg"
-                />
-              }
-            />
-          </div> */}
           <h1
             onClick={() => router.push(ROUTES.SIGN_IN)}
             className="text-sm roboto-font text-gray cursor-pointer lg:mt-6"

@@ -33,17 +33,6 @@ const Header = () => {
           icon={CiSearch}
         />
         <Button
-          radius="rounded-3xl"
-          icon={<SortByIcon />}
-          iconAfterText={<IoChevronDown />}
-          text="Sort by"
-          className="lexend-deca-font border border-primary/20 font-light hover:shadow-md text-xs md:text-sm xl:text-base"
-          padding="py-2.5 px-3 xl:px-4"
-          buttonColor="white"
-          color="text-lightBlack"
-          animation
-        />
-        <Button
           onClick={() =>
             updateModal({
               type: modalType.CREATE_TASK,
