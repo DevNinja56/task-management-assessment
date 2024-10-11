@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import FlagIcon from "../icon/flagIcon";
 import { MdBlock } from "react-icons/md";
+import { allEnums } from "@/constants/enums";
 
 const PriorityDropDown = ({ onSelectPriority }) => {
   const handlePrioritySelect = (priority) => {
@@ -16,34 +17,17 @@ const PriorityDropDown = ({ onSelectPriority }) => {
       onClick={(e) => e.stopPropagation()}
     >
       <div className="p-2.5 pb-0 w-full">
-        <div
-          onClick={() => handlePrioritySelect("Urgent")}
-          className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
-        >
-          <FlagIcon color="red" />
-          Urgent
-        </div>
-        <div
-          onClick={() => handlePrioritySelect("High")}
-          className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
-        >
-          <FlagIcon color="yellow" />
-          High
-        </div>
-        <div
-          onClick={() => handlePrioritySelect("Normal")}
-          className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
-        >
-          <FlagIcon color="#0283FB" />
-          Normal
-        </div>
-        <div
-          onClick={() => handlePrioritySelect("Low")}
-          className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
-        >
-          <FlagIcon color="#5A6A85" />
-          Low
-        </div>
+        {allEnums.priority.map((one, i) => {
+          return (
+            <div
+              onClick={() => handlePrioritySelect(one.value)}
+              className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300"
+            >
+              <FlagIcon color={one.color} />
+              {one.label}
+            </div>
+          );
+        })}
       </div>
       <hr className="border border-lightBlue/25" />
       <div className="w-full px-2.5 pb-2.5">
