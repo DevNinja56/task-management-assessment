@@ -10,13 +10,26 @@ import DateDropDown from "../dropdown/dateDropDown";
 import PriorityDropDown from "../dropdown/priorityDropDown";
 import { useUi } from "@/hooks/useUserInterface";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { useTask } from "@/hooks/useTask";
+import { addTask, updateTask } from "@/store/slices/task.slice";
+import { useDispatch } from "react-redux";
 
 const CreateTaskModal = () => {
-  const { hideModal } = useUi();
-  const [taskName, setTaskName] = useState("");
-  const [assignedUsers, setAssignedUsers] = useState([]);
-  const [dueDate, setDueDate] = useState(null);
-  const [priority, setPriority] = useState("");
+  const { addNewTask, editTask } = useTask();
+  const { hideModal, modalState } = useUi();
+  const { task } = modalState;
+
+  const mappedAssignedUsers =
+    task?.assignedUsers?.map((item) => item?._id) || [];
+
+  const [taskName, setTaskName] = useState(task?.title || "");
+  const [assignedUsers, setAssignedUsers] = useState(mappedAssignedUsers);
+  const [dueDate, setDueDate] = useState({
+    startDate: task?.startDate,
+    endDate: task?.endDate,
+  });
+  const [priority, setPriority] = useState(task?.priority || undefined);
 
   const [showAssignDropdown, setShowAssignDropdown] = useState(false);
   const [showDateDropdown, setShowDateDropdown] = useState(false);
@@ -56,24 +69,44 @@ const CreateTaskModal = () => {
     };
   }, []);
 
-  console.log(dueDate, "dueDate");
-
-  const createTask = async () => {
+  const createOrUpdateTask = async () => {
     try {
       const taskData = {
-        name: taskName,
+        title: taskName,
         assignedUsers,
         startDate: dueDate.startDate,
         endDate: dueDate.endDate,
         priority,
       };
 
-      await axios.post("/api/tasks", taskData);
-      hideModal();
+      let response;
+      if (task) {
+        response = await axios.put(`/api/tasks/${task._id}`, taskData);
+        editTask(task._id, response.data);
+      } else {
+        response = await axios.post("/api/tasks", taskData);
+        addNewTask(response.data);
+      }
+
+      if (response && response.status === (task ? 200 : 201)) {
+        hideModal();
+        toast.success(task ? "Task Updated" : "Task Created");
+      }
     } catch (error) {
-      console.error("Error creating task", error);
+      toast.error(
+        "Failed to " + (task ? "update" : "create") + " task: " + error.message
+      );
     }
   };
+
+  console.log(
+    taskName,
+    assignedUsers,
+    dueDate.startDate,
+    dueDate.endDate,
+    priority,
+    "test"
+  );
 
   return (
     <div className="h-screen w-screen grid place-items-center overflow-auto">
@@ -83,7 +116,7 @@ const CreateTaskModal = () => {
       >
         <div className="p-4 md:p-5 border-b border-lightBlue/20 w-full flex items-center justify-between">
           <h1 className="text-primary text-xl md:text-2xl font-medium lexend-deca-font">
-            Create Task
+            {task ? "Update Task" : "Create Task"}
           </h1>
           <RxCross2
             onClick={hideModal}
@@ -128,7 +161,10 @@ const CreateTaskModal = () => {
                 icon={<User />}
               />
               {showAssignDropdown && (
-                <AssignDropDown onSelect={(users) => setAssignedUsers(users)} />
+                <AssignDropDown
+                  onSelect={(users) => setAssignedUsers(users)}
+                  assignedUsers={assignedUsers}
+                />
               )}
             </div>
             <div
@@ -150,7 +186,10 @@ const CreateTaskModal = () => {
                 icon={<CalendarIcon />}
               />
               {showDateDropdown && (
-                <DateDropDown onSelectDate={(date) => setDueDate(date)} />
+                <DateDropDown
+                  onSelectDate={(date) => setDueDate(date)}
+                  dueDate={dueDate}
+                />
               )}
             </div>
             <div
@@ -173,6 +212,8 @@ const CreateTaskModal = () => {
               />
               {showPriorityDropdown && (
                 <PriorityDropDown
+                  selectedpriority={priority}
+                  setPriority={setPriority}
                   onSelectPriority={(priority) => setPriority(priority)}
                 />
               )}
@@ -186,9 +227,9 @@ const CreateTaskModal = () => {
             radius="rounded-lg"
             color="white"
             className="lexend-deca-font font-light text-xs md:text-sm"
-            text="Create Task"
+            text={task ? "Update Task" : "Create Task"}
             animation
-            onClick={createTask}
+            onClick={createOrUpdateTask}
           />
         </div>
       </div>

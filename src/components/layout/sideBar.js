@@ -47,7 +47,7 @@ const SideBar = ({ isFullWidth, setIsFullWidth }) => {
         minWidth: getSidebarWidth(),
       }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
-      className={`admin-sidebar bg-primary shadow-inner flex flex-col pb-8 transition-all duration-300 fixed lg:top-0 lg:left-0 h-full ${
+      className={`admin-sidebar bg-primary shadow-inner flex flex-col pb-8 transition-all duration-300 fixed lg:sticky lg:top-0 lg:left-0 h-full lg:h-screen ${
         showSideBar ? "left-0 lg:left-auto" : "-left-[101px] lg:left-auto"
       } z-50`}
     >

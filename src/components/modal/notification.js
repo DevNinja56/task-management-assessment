@@ -1,59 +1,59 @@
 import { useUi } from "@/hooks/useUserInterface";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 
 const Notification = () => {
-  const notificationData = [
-    {
-      name: "John",
-      title: "Moved to to-do",
-      image: "/images/Wave.svg",
-      date: "10/10/2024",
-    },
-    {
-      name: "Harry",
-      title: "Moved to in-progress",
-      image: "/images/Wave.svg",
-      date: "10/10/2024",
-    },
-    {
-      name: "Kevin",
-      title: "Create new board",
-      image: "/images/Wave.svg",
-      date: "6/10/2024",
-    },
-    {
-      name: "Angle",
-      title: "Moved to to-do",
-      image: "/images/Wave.svg",
-      date: "5/10/2024",
-    },
-    {
-      name: "Kevin",
-      title: "Create new board",
-      image: "/images/Wave.svg",
-      date: "6/10/2024",
-    },
-    {
-      name: "Angle",
-      title: "Moved to to-do",
-      image: "/images/Wave.svg",
-      date: "5/10/2024",
-    },
-    {
-      name: "Kevin",
-      title: "Create new board",
-      image: "/images/Wave.svg",
-      date: "6/10/2024",
-    },
-    {
-      name: "Angle",
-      title: "Moved to to-do",
-      image: "/images/Wave.svg",
-      date: "5/10/2024",
-    },
-  ];
+  const [notifications, setNotifications] = useState([]);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      socket = io("/", {
+        path: "/api/socketio",
+      });
+
+      socket.on("connect", () => {
+        console.log("Connected to Socket.IO server");
+
+        socket.on(`notification-${session?.user?.id}`, (data) => {
+          setNotifications((prevNotifications) => [...prevNotifications, data]);
+          alert(data.message);
+        });
+      });
+
+      socket.on("connect_error", (err) => {
+        console.error("Connection failed:", err.message);
+      });
+
+      return () => {
+        if (socket) {
+          socket.disconnect();
+        }
+      };
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (session) {
+      const fetchInitialData = async () => {
+        try {
+          const [notificationRes] = await Promise.all([
+            axios.get("/api/notifications"),
+          ]);
+
+          setNotifications(notificationRes.data);
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching data", error);
+          setLoading(false);
+        }
+      };
+
+      fetchInitialData();
+    }
+  }, [session]);
 
   return (
     <div
@@ -69,7 +69,7 @@ const Notification = () => {
         </p>
       </div>
       <div className="h-[450px] lg:h-[500px] overflow-y-scroll notification-scroll">
-        {notificationData?.map((item, index) => (
+        {notifications?.map((item, index) => (
           <div
             className="flex gap-1.5 p-4 md:p-5"
             key={"notifications--" + index}

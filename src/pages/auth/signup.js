@@ -32,6 +32,7 @@ export default function SignUp() {
 
         // Redirect to sign-in page after successful registration
         router.push("/auth/signin");
+        toast.success("User Created Successfully");
       }
     } catch (error) {
       setLoading(false);

@@ -4,6 +4,7 @@ export const modalType = {
   NONE: "none",
   CREATE_TASK: "createTask",
   NOTIFICATION: "notification",
+  DELETE: "delete",
 };
 
 const initialState = {

@@ -5,10 +5,10 @@ import Image from "next/image";
 import axios from "axios";
 import LoaderSpinner from "../common/loaderSpinner";
 
-const AssignDropDown = ({ onSelect }) => {
+const AssignDropDown = ({ onSelect, assignedUsers }) => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState(assignedUsers || []);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,6 +27,10 @@ const AssignDropDown = ({ onSelect }) => {
     };
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    setSelectedUsers(assignedUsers);
+  }, [assignedUsers]);
 
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -62,13 +66,15 @@ const AssignDropDown = ({ onSelect }) => {
       <div className="px-2.5 pt-4 pb-5 flex flex-col gap-2.5 w-full items-center">
         {loading ? (
           <LoaderSpinner color="text-primary" />
-        ) : filteredUsers && filteredUsers.length > 0 ? (
+        ) : filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
             <div
               key={"user--" + user._id}
               onClick={() => toggleUserSelection(user)}
               className={`bg-lightBlue/15 px-2.5 py-1.5 flex items-center gap-1.5 w-full rounded-md relative group cursor-pointer ${
-                selectedUsers.includes(user._id) ? "bg-lightBlue/25" : ""
+                selectedUsers.includes(user._id)
+                  ? "bg-primary text-white"
+                  : "text-lightBlue"
               }`}
             >
               <Image
@@ -78,7 +84,7 @@ const AssignDropDown = ({ onSelect }) => {
                 className="border border-white rounded-full h-5 w-5 md:h-auto md:w-auto"
                 alt="assign-user-image"
               />
-              <h2 className="font-light text-xs md:text-sm lexend-deca-font text-lightBlue">
+              <h2 className="font-light text-xs md:text-sm lexend-deca-font">
                 {user.name}
               </h2>
             </div>

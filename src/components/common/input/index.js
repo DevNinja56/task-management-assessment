@@ -42,8 +42,8 @@ const Input = ({
           id={"input-box--" + (id ?? name)}
         />
         {Icon && (
-          <span className="absolute left-0 grid h-[49px] w-[49px] place-items-center max-sm:translate-y-[-40px] sm:-top-[2px] ">
-            <Icon className="h-3 w-3 md:h-[25px] md:w-[25px] " />
+          <span className="absolute left-0 grid h-[49px] w-[49px] place-items-center max-sm:translate-y-[-48px] sm:-top-[2px] ">
+            <Icon className="h-[25px] w-[25px] " />
           </span>
         )}
         {type === "password" && (

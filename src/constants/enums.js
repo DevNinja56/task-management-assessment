@@ -21,4 +21,22 @@ export const allEnums = {
       color: "#5A6A85",
     },
   ],
+  boards: [
+    {
+      label: "Initial phase",
+      value: "initial_phase",
+    },
+    {
+      label: "Development",
+      value: "development",
+    },
+    {
+      label: "Quality Assurance (QA)",
+      value: "qa",
+    },
+    {
+      label: "Production",
+      value: "production",
+    },
+  ],
 };

@@ -5,6 +5,7 @@ import MainLayout from "@/layout";
 import { store } from "@/store";
 import { Provider } from "react-redux";
 import ModalWrapper from "@/components/modal";
+import { Toaster } from "react-hot-toast";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   useEffect(() => {
@@ -24,6 +25,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
           <Component {...pageProps} />
         </MainLayout>
         <ModalWrapper />
+        <Toaster position="bottom-center" reverseOrder={false} />
       </Provider>
     </SessionProvider>
   );

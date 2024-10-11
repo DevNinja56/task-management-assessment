@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Button from "@/components/common/button";
 import DateIcon from "@/components/icon/dateIcon";
 import { Calendar } from "primereact/calendar";
 
-const DateDropDown = ({ onSelectDate }) => {
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-
+const DateDropDown = ({ onSelectDate, dueDate }) => {
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [showCalendar, setShowCalendar] = useState("startDate");
+
+  useEffect(() => {
+    if (dueDate?.startDate) {
+      setStartDate(new Date(dueDate.startDate));
+    }
+    if (dueDate?.endDate) {
+      setEndDate(new Date(dueDate.endDate));
+    }
+  }, [dueDate]);
 
   const handleDateChange = (date, type) => {
     if (type === "startDate") {
       setStartDate(date);
-      onSelectDate({ startDate: date, endDate }); // Pass the selected startDate
+      onSelectDate({ startDate: date, endDate }); // only update startDate
     } else {
       setEndDate(date);
-      onSelectDate({ startDate, endDate: date }); // Pass the selected endDate
+      onSelectDate({ startDate, endDate: date }); // only update endDate
     }
   };
 
@@ -60,12 +68,16 @@ const DateDropDown = ({ onSelectDate }) => {
             value={startDate}
             onChange={(e) => handleDateChange(e.value, "startDate")}
             inline
+            showIcon
+            dateFormat="yy-mm-dd"
           />
         ) : (
           <Calendar
             value={endDate}
             onChange={(e) => handleDateChange(e.value, "endDate")}
             inline
+            showIcon
+            dateFormat="yy-mm-dd"
           />
         )}
       </div>

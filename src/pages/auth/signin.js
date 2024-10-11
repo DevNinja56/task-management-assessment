@@ -7,6 +7,7 @@ import { ROUTES } from "@/config/routes";
 import AuthContent from "@/components/pages/auth/authContent";
 import Button from "@/components/common/button";
 import Input from "@/components/common/input";
+import toast from "react-hot-toast";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -37,6 +38,7 @@ export default function SignIn() {
       // Redirect to homepage or protected page after successful login
       setLoading(false);
       router.push(ROUTES.DASHBOARD);
+      toast.success("Login Successfully");
     }
   };
 
