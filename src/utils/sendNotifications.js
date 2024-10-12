@@ -1,14 +1,15 @@
-import { getIO } from "@/lib/socket";
 import Notification from "@/models/Notification";
 
-const sendNotification = async (taskId, userIds, message) => {
+const sendNotification = async (taskId, userIds, message, io) => {
   try {
-    // Make sure Socket.IO is initialized
-    const io = getIO();
+    console.log("Sending notification start");
 
     // Create notifications in the database for all users in parallel
     await Promise.all(
       userIds.map(async (userId) => {
+        const channelName = `notification-${userId.toString()}`;
+        console.log(channelName);
+
         // Create the notification in the database
         await Notification.create({
           user: userId,
@@ -17,7 +18,7 @@ const sendNotification = async (taskId, userIds, message) => {
         });
 
         // Emit the notification via socket.io to the user's specific room
-        io.emit(`notification-${userId.toString()}`, { message, taskId });
+        io.emit(channelName, { message, taskId });
       })
     );
   } catch (error) {

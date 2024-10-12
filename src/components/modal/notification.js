@@ -1,25 +1,46 @@
-import { useUi } from "@/hooks/useUserInterface";
+import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
+import { io } from "socket.io-client";
+import toast, { Toaster } from "react-hot-toast";
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
   const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
 
+  // Fetch notifications from the API
+  const fetchNotifications = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/api/notifications", {
+        params: { page: 1, limit: 10 }, // Adjust limit as needed
+      });
+      setNotifications(response.data.notifications);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching notifications", error);
+      setLoading(false);
+    }
+  };
+
+  // Initialize socket connection and listen for notifications
   useEffect(() => {
     if (session) {
-      socket = io("/", {
-        path: "/api/socketio",
+      // Ensure the socket connects to the right endpoint
+      const socket = io({
+        path: "/api/socketio", // Ensure the path matches your server
       });
 
       socket.on("connect", () => {
         console.log("Connected to Socket.IO server");
+        const channelName = `notification-${session.user.id}`;
+        console.log(channelName);
 
-        socket.on(`notification-${session?.user?.id}`, (data) => {
-          setNotifications((prevNotifications) => [...prevNotifications, data]);
-          alert(data.message);
+        // Listen for task notifications
+        socket.on(channelName, (data) => {
+          fetchNotifications();
         });
       });
 
@@ -35,23 +56,10 @@ const Notification = () => {
     }
   }, [session]);
 
+  // Initial fetch of notifications
   useEffect(() => {
     if (session) {
-      const fetchInitialData = async () => {
-        try {
-          const [notificationRes] = await Promise.all([
-            axios.get("/api/notifications"),
-          ]);
-
-          setNotifications(notificationRes.data);
-          setLoading(false);
-        } catch (error) {
-          console.error("Error fetching data", error);
-          setLoading(false);
-        }
-      };
-
-      fetchInitialData();
+      fetchNotifications();
     }
   }, [session]);
 
@@ -60,38 +68,35 @@ const Notification = () => {
       onClick={(e) => e.stopPropagation()}
       className="w-64 md:w-[300px] bg-white rounded-md absolute top-20 right-2 md:right-6 lg:right-8 xl:right-12"
     >
+      <Toaster />
       <div className="p-4 md:p-5 border-b border-lightBlue/20 w-full flex items-center justify-between bg-primary rounded-t-md">
         <h1 className="text-white text-base md:text-xl font-medium lexend-deca-font">
           Notifications
         </h1>
-        <p className="text-white roboto-font text-xs md:text-sm cursor-pointer transition-all duration-300 hover:opacity-70">
-          Clear All
-        </p>
       </div>
       <div className="h-[450px] lg:h-[500px] overflow-y-scroll notification-scroll">
-        {notifications?.map((item, index) => (
-          <div
-            className="flex gap-1.5 p-4 md:p-5"
-            key={"notifications--" + index}
-          >
-            <Image
-              height={30}
-              width={30}
-              className="rounded-full"
-              alt="notification-img"
-              src={item.image}
-            />
-            <div className="flex flex-col gap-2.5 w-full">
-              <div className="w-full flex items-center">
-                <h1 className="text-xs lexend-deca-font text-black">
-                  {item?.name} {""}{" "}
-                  <span className="text-gray">{item?.title}</span>
-                </h1>
+        {loading ? (
+          <p className="text-center">Loading notifications...</p>
+        ) : (
+          notifications?.map((item, index) => (
+            <div
+              className="flex gap-1.5 p-4 md:p-5"
+              key={"notifications--" + index}
+            >
+              <div className="flex flex-col gap-2.5 w-full">
+                <div className="w-full flex items-center">
+                  <h1 className="text-xs lexend-deca-font text-black">
+                    {item?.name}{" "}
+                    <span className="text-gray">{item?.message}</span>
+                  </h1>
+                </div>
+                <p className="text-xs text-gray">
+                  {new Date(item?.createdAt).toLocaleString()}
+                </p>
               </div>
-              <p className="text-xs text-gray">{item?.date}</p>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

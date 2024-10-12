@@ -1,293 +1,62 @@
 # API Documentation
 
-## Authentication
+## API Endpoints
 
-All endpoints require authentication using the session retrieved through `next-auth`. Unauthorized access will return a `401 Unauthorized` status.
+### 1. **Auth**
 
----
+These endpoints handle user authentication.
 
-## Notifications Endpoints
+- **[...nextauth].js**:
+  - Handles dynamic routes for NextAuth.js authentication.
+- **signup.js**:
+  - Route: `/api/auth/signup`
+  - Handles user signup functionality.
 
-### **GET /api/notifications**
+### 2. **Notifications**
 
-#### Description:
+These endpoints handle notifications for users.
 
-Fetch a list of notifications for the authenticated user.
+- **index.js**:
 
-#### Query Parameters:
+  - Route: `/api/notifications`
+  - Retrieves all notifications for a user.
 
-- `page` (optional): Page number for pagination (default: `1`).
-- `limit` (optional): Number of notifications per page (default: `10`).
+- **markAsRead.js**:
+  - Route: `/api/notifications/markAsRead`
+  - Marks all notifications as read for a user.
 
-#### Success Response:
+### 3. **Tasks**
 
-- Status: `200 OK`
-- Body:
-  \`\`\`json
-  {
-  "notifications": [
-  {
-  "_id": "notification_id",
-  "user": "user_id",
-  "content": "Notification content",
-  "read": false,
-  "createdAt": "timestamp"
-  }
-  ],
-  "currentPage": 1,
-  "totalPages": 5,
-  "totalNotifications": 50
-  }
-  \`\`\`
+These endpoints handle task-related operations.
 
-#### Errors:
+- **[taskId].js**:
 
-- `401 Unauthorized`: If the user is not authenticated.
-- `500 Internal Server Error`: If there is an error fetching notifications.
+  - Route: `/api/tasks/[taskId]`
+  - Retrieves, updates, or deletes a specific task by its ID.
 
----
+- **getTasksByStatus.js**:
 
-### **PUT /api/notifications/mark-all-read**
+  - Route: `/api/tasks/getTasksByStatus`
+  - Fetches tasks based on their status (e.g., completed, pending).
 
-#### Description:
+- **index.js**:
 
-Mark all unread notifications for the authenticated user as read.
+  - Route: `/api/tasks`
+  - Retrieves all tasks for the authenticated user.
 
-#### Success Response:
+- **status.js**:
+  - Route: `/api/tasks/status`
+  - Updates the status of a task.
 
-- Status: `200 OK`
-- Body:
-  \`\`\`json
-  {
-  "message": "All notifications marked as read"
-  }
-  \`\`\`
+### 4. **Users**
 
-#### Errors:
+These endpoints manage user profiles and data.
 
-- `401 Unauthorized`: If the user is not authenticated.
-- `500 Internal Server Error`: If there is an error updating notifications.
+- **index.js**:
+  - Route: `/api/users`
+  - Retrieves user details and handles profile-related operations.
 
----
+### 5. **Seed**
 
-## Task Endpoints
-
-### **GET /api/tasks/[taskId]**
-
-#### Description:
-
-Fetch details of a specific task by its ID.
-
-#### Path Parameters:
-
-- `taskId` (required): The ID of the task to retrieve.
-
-#### Success Response:
-
-- Status: `200 OK`
-- Body:
-  \`\`\`json
-  {
-  "\_id": "task_id",
-  "name": "Task name",
-  "description": "Task description",
-  "status": "in-progress",
-  "priority": "high",
-  "assignedUsers": ["user_id_1", "user_id_2"],
-  "createdAt": "timestamp"
-  }
-  \`\`\`
-
-#### Errors:
-
-- `401 Unauthorized`: If the user is not authenticated.
-- `404 Not Found`: If the task does not exist.
-- `500 Internal Server Error`: If there is an error fetching the task.
-
----
-
-### **PUT /api/tasks/[taskId]**
-
-#### Description:
-
-Update a specific task by its ID. Only admins are allowed to update tasks.
-
-#### Path Parameters:
-
-- `taskId` (required): The ID of the task to update.
-
-#### Request Body:
-
-- JSON object containing task fields to update.
-
-````json
-{
-  "title": "Task title",
-  "description": "Task description",
-  "assignedUsers": ["user_id_1", "user_id_2"],
-  "status": "initial_phase",    // optional, default: "initial_phase"
-  "priority": "medium",         // optional, default: "medium"
-  "startDate": "2024-10-10",    // optional
-  "endDate": "2024-10-15",      // optional
-}
-
-#### Success Response:
-
-- Status: `200 OK`
-- Body:
-  \`\`\`json
-  {
-  "\_id": "task_id",
-  "name": "Updated task name",
-  "description": "Updated task description",
-  "status": "completed",
-  "priority": "medium"
-  }
-  \`\`\`
-
-#### Errors:
-
-- `401 Unauthorized`: If the user is not authenticated.
-- `403 Forbidden`: If the user is not an admin.
-- `404 Not Found`: If the task does not exist.
-- `500 Internal Server Error`: If there is an error updating the task.
-
----
-
-### **DELETE /api/tasks/[taskId]**
-
-#### Description:
-
-Delete a specific task by its ID. Only admins or users assigned to the task can delete it.
-
-#### Path Parameters:
-
-- `taskId` (required): The ID of the task to delete.
-
-#### Success Response:
-
-- Status: `200 OK`
-- Body:
-  \`\`\`json
-  {
-  "message": "Task deleted"
-  }
-  \`\`\`
-
-#### Errors:
-
-- `401 Unauthorized`: If the user is not authenticated.
-- `403 Forbidden`: If the user is not an admin or not assigned to the task.
-- `404 Not Found`: If the task does not exist.
-- `500 Internal Server Error`: If there is an error deleting the task.
-
----
-
-### **GET /api/tasks/getTasksByStatus**
-
-#### Description:
-
-Fetch tasks filtered by status.
-
-#### Query Parameters:
-
-- `status` (required): The status of the tasks to retrieve.
-
-#### Success Response:
-
-- Status: `200 OK`
-- Body:
-  \`\`\`json
-  {
-  "tasks": [
-  {
-  "\_id": "task_id",
-  "name": "Task name",
-  "description": "Task description",
-  "status": "completed",
-  "assignedUsers": [
-  {
-  "_id": "user_id",
-  "name": "User Name",
-  "email": "user@example.com"
-  }
-  ]
-  }
-  ]
-  }
-  \`\`\`
-
-#### Errors:
-
-- `400 Bad Request`: If the status is not provided.
-- `404 Not Found`: If no tasks are found with the specified status.
-- `500 Internal Server Error`: If there is an error fetching tasks.
-
----
-
-### **POST /api/tasks**
-
-#### Description:
-
-Create a new task. Only admins are allowed to create tasks.
-
-#### Request Body:
-
-- JSON object containing task details.
-
-```json
-{
-  "title": "Task title",
-  "description": "Task description",
-  "assignedUsers": ["user_id_1", "user_id_2"],
-  "status": "initial_phase",    // optional, default: "initial_phase"
-  "priority": "medium",         // optional, default: "medium"
-  "startDate": "2024-10-10",    // optional
-  "endDate": "2024-10-15",      // optional
-}
-
-#### Success Response:
-- Status: `201 Created`
-- Body:
-  \`\`\`json
-  {
-    "_id": "task_id",
-    "name": "New task",
-    "description": "Task description",
-    "assignedUsers": ["user_id_1", "user_id_2"],
-    "createdBy": "admin_id"
-  }
-  \`\`\`
-
-#### Errors:
-- `401 Unauthorized`: If the user is not authenticated.
-- `403 Forbidden`: If the user is not an admin.
-- `500 Internal Server Error`: If there is an error creating the task.
-
----
-
-### **GET /api/users**
-
-#### Description:
-Fetch a list of users. Only admins can access this endpoint.
-
-#### Success Response:
-- Status: `200 OK`
-- Body:
-  \`\`\`json
-  {
-    "success": true,
-    "data": [
-      {
-        "_id": "user_id",
-        "name": "User Name",
-        "email": "user@example.com"
-      }
-    ]
-  }
-  \`\`\`
-
-#### Errors:
-- `403 Forbidden`: If the user is not an admin.
-- `500 Internal Server Error`: If there is an error fetching users.
-````
+- **seed.js**:
+  - Seeds the database with initial data.

@@ -135,13 +135,10 @@ const CreateTaskModal = () => {
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
               className="w-full rounded-md min-h-36 bg-lightBlue/15 pt-1.5 pl-9 pr-2.5 text-lightBlue lexend-deca-font outline-none font-light resize-none text-sm md:text-base"
-              placeholder="Add description"
+              placeholder="Task Name"
             />
           </div>
           <div className="flex items-center flex-wrap gap-3">
-            <div className="py-1 px-2.5 bg-lightBlue/25 flex items-center justify-center rounded-md lexend-deca-font text-xs md:text-sm text-lightBlue">
-              To do
-            </div>
             <div
               ref={assignDropdownRef}
               onClick={() => {

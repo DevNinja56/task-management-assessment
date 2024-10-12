@@ -4,6 +4,13 @@ import { authOptions } from "../auth/[...nextauth]";
 import sendNotification from "@/utils/sendNotifications";
 
 export default async function handler(req, res) {
+  const io = res.socket.server.io;
+
+  if (!io) {
+    // If Socket.IO is not initialized, initialize it
+    await import("../socket"); // This will initialize Socket.IO on the first request
+  }
+
   const session = await getServerSession(req, res, authOptions);
   if (!session) return res.status(401).json({ message: "Unauthorized" });
 
@@ -37,13 +44,16 @@ export default async function handler(req, res) {
           createdBy: user.id,
         });
 
+        // Notify all assigned users about the new task
         sendNotification(
           task._id,
           task.assignedUsers,
-          `${user.name} created a new task`
+          `${user.name} created a new task`,
+          io
         );
 
-        sendNotification(task._id, [user.id], `You created a new task`);
+        // Notify the task creator (for record-keeping)
+        sendNotification(task._id, [user.id], `You created a new task`, io);
 
         res.status(201).json(task);
       } catch (error) {

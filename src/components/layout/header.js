@@ -10,11 +10,13 @@ import { modalType } from "@/store/slices/ui.slice";
 import { setSearchQuery } from "@/store/slices/search.slice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { useSession } from "next-auth/react";
 
 const Header = () => {
   const { pathname } = useRouter();
   const { updateModal } = useUi();
   const dispatch = useDispatch();
+  const { data: session, status } = useSession();
 
   return (
     <div className="bg-white flex flex-col gap-4 sticky top-0 py-7 md:py-6 xl:px-12 md:px-6 lg:px-8 px-2 z-40">
@@ -38,20 +40,25 @@ const Header = () => {
               dispatch(setSearchQuery(e.target.value));
             }}
           />
-          <Button
-            onClick={() =>
-              updateModal({
-                type: modalType.CREATE_TASK,
-                state: "",
-              })
-            }
-            radius="rounded-3xl"
-            icon={<FiPlus className="lg:text-xl" />}
-            text="Create Task"
-            className="lexend-deca-font font-light text-xs md:text-sm xl:text-base"
-            padding="py-2.5 px-3 xl:px-4"
-            animation
-          />
+          {session?.user?.role == "admin" ? (
+            <Button
+              onClick={() =>
+                updateModal({
+                  type: modalType.CREATE_TASK,
+                  state: "",
+                })
+              }
+              radius="rounded-3xl"
+              icon={<FiPlus className="lg:text-xl" />}
+              text="Create Task"
+              className="lexend-deca-font font-light text-xs md:text-sm xl:text-base"
+              padding="py-2.5 px-3 xl:px-4"
+              animation
+            />
+          ) : (
+            <></>
+          )}
+
           <div
             onClick={() =>
               updateModal({
