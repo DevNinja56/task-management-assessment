@@ -1,3 +1,4 @@
+import { useLanguage } from "@/components/languageSwitcher/languageContext";
 import React, { useState } from "react";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 
@@ -18,6 +19,7 @@ const Input = ({
   ...props
 }) => {
   const [isShown, setShow] = useState(false);
+  const { direction } = useLanguage();
 
   return (
     <label
@@ -42,13 +44,15 @@ const Input = ({
           id={"input-box--" + (id ?? name)}
         />
         {Icon && (
-          <span className="absolute left-0 grid h-[49px] w-[49px] place-items-center max-sm:translate-y-[-48px] sm:-top-[2px] ">
+          <span className="absolute left-0 grid h-[49px] w-[49px] place-items-center max-sm:translate-y-[-48px] sm:-top-[2px]">
             <Icon className="h-[25px] w-[25px] " />
           </span>
         )}
         {type === "password" && (
           <span
-            className="absolute right-0 top-[1px] grid h-[60px] w-[49px] cursor-pointer place-items-center md:-top-[1px] "
+            className={`absolute ${
+              direction === "ltr" ? "right-0" : "left-0"
+            } top-[1px] grid h-[60px] w-[49px] cursor-pointer place-items-center md:-top-[1px] `}
             onClick={() => setShow((prev) => !prev)}
           >
             {isShown ? (

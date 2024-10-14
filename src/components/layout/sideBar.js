@@ -7,11 +7,15 @@ import { SIDE_ROUTES } from "@/config/side_routes";
 import { GoChevronRight } from "react-icons/go";
 import { HiBars3 } from "react-icons/hi2";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../languageSwitcher/languageContext";
 
 const SideBar = ({ isFullWidth, setIsFullWidth }) => {
   const { pathname } = useRouter();
   const [showSideBar, setShowSideBar] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
+  const { t } = useTranslation("common");
+  const { direction } = useLanguage();
 
   const isActive = (path) => path === pathname;
 
@@ -48,12 +52,20 @@ const SideBar = ({ isFullWidth, setIsFullWidth }) => {
       }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
       className={`admin-sidebar bg-primary shadow-inner flex flex-col pb-8 transition-all duration-300 fixed lg:sticky lg:top-0 lg:left-0 h-full lg:h-screen ${
-        showSideBar ? "left-0 lg:left-auto" : "-left-[101px] lg:left-auto"
+        direction === "ltr"
+          ? showSideBar
+            ? "left-0 lg:left-auto"
+            : "-left-[101px] lg:left-auto"
+          : showSideBar
+          ? "right-0 lg:right-auto"
+          : "-right-[101px] lg:right-auto"
       } z-50`}
     >
       <div
         onClick={() => setIsFullWidth(!isFullWidth)}
-        className="h-6 w-6 rounded-full bg-white absolute top-9 -right-3 hidden lg:flex items-center justify-center border border-primary cursor-pointer z-[60]"
+        className={`h-6 w-6 rounded-full bg-white absolute top-9 ${
+          direction === "ltr" ? "-right-3" : "-left-3"
+        }  hidden lg:flex items-center justify-center border border-primary cursor-pointer z-[60]`}
       >
         <GoChevronRight
           className={`text-xl text-primary ${isFullWidth && "rotate-180"}`}
@@ -64,7 +76,9 @@ const SideBar = ({ isFullWidth, setIsFullWidth }) => {
           setShowSideBar(!showSideBar);
           setIsFullWidth(false);
         }}
-        className="h-6 w-6 rounded-sm rounded-l-none bg-white absolute top-0 border-l-none -right-6 flex lg:hidden items-center justify-center border border-primary cursor-pointer z-[60] transition-all duration-300"
+        className={`h-6 w-6 rounded-sm rounded-l-none bg-white absolute top-0 border-l-none ${
+          direction === "ltr" ? "-right-6" : "-left-6"
+        }  flex lg:hidden items-center justify-center border border-primary cursor-pointer z-[60] transition-all duration-300`}
       >
         <HiBars3
           className={`text-xl text-primary ${isFullWidth && "rotate-180"}`}
@@ -72,8 +86,14 @@ const SideBar = ({ isFullWidth, setIsFullWidth }) => {
       </div>
 
       <div
-        className={`flex items-center ${
-          isFullWidth ? "pl-6" : "px-6"
+        className={`flex items-center ${isFullWidth ? "pl-6" : "px-6"} ${
+          direction === "ltr"
+            ? isFullWidth
+              ? "pl-6"
+              : "px-6"
+            : isFullWidth
+            ? "pr-6"
+            : "px-6"
         } gap-2 py-7 border-b border-white/20 transition-all duration-300`}
       >
         <Link
@@ -88,7 +108,7 @@ const SideBar = ({ isFullWidth, setIsFullWidth }) => {
         </Link>
         {isFullWidth && (
           <h1 className="text-xl font-extrabold lexend-deca-font text-white min-w-[188px]">
-            Taskmaster Pro
+            {t("title")}
           </h1>
         )}
       </div>
@@ -108,7 +128,7 @@ const SideBar = ({ isFullWidth, setIsFullWidth }) => {
                   height="22"
                   width="22"
                 />
-                {isFullWidth && title}
+                {isFullWidth && t(title)}
               </button>
             </Link>
           ) : null

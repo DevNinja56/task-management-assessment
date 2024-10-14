@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import FlagIcon from "../icon/flagIcon";
 import { MdBlock } from "react-icons/md";
 import { allEnums } from "@/constants/enums";
+import { useTranslation } from "react-i18next";
 
 const PriorityDropDown = ({
   selectedpriority,
   onSelectPriority,
   setPriority,
 }) => {
+  const { t } = useTranslation("common");
   const handlePrioritySelect = (priority) => {
     onSelectPriority(priority);
   };
@@ -32,7 +34,7 @@ const PriorityDropDown = ({
               } hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300 mb-[2px]`}
             >
               <FlagIcon color={priority.color} />
-              {priority.label}
+              {t(priority.value)}
             </div>
           );
         })}
@@ -41,7 +43,7 @@ const PriorityDropDown = ({
       <div onClick={() => setPriority(null)} className="w-full px-2.5 pb-2.5">
         <div className="w-full py-1.5 px-2.5 flex items-center gap-1.5 font-light text-lightBlue lexend-deca-font text-xs hover:bg-lightBlue/10 rounded-md cursor-pointer transition-all duration-300">
           <MdBlock className="text-lg text-lightBlue" />
-          Clear All
+          {t("clear_all")}
         </div>
       </div>
     </motion.div>

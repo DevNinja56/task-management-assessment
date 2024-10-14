@@ -4,7 +4,7 @@ import DashboardIcon from "@/components/icon/dashboardIcon";
 export const SIDE_ROUTES = [
   {
     path: ROUTES.DASHBOARD,
-    title: "Dashboard",
+    title: "dashboard",
     Icon: DashboardIcon,
   },
 ];

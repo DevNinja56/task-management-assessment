@@ -1,8 +1,11 @@
 import User from "@/models/User";
 import dbConnect from "../../../utils/dbConnect";
 import bcrypt from "bcryptjs";
+import { useTranslation } from "react-i18next";
 
 export default async function handler(req, res) {
+  const { t } = useTranslation("common");
+
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
@@ -13,7 +16,7 @@ export default async function handler(req, res) {
 
   // Validate the input data
   if (!name || !email || !password) {
-    return res.status(400).json({ message: "All fields are required." });
+    return res.status(400).json({ message: t("all_fields_are_required") });
   }
 
   try {
@@ -25,8 +28,6 @@ export default async function handler(req, res) {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
-
-    console.log(hashedPassword);
 
     // Create a new user with the hashed password
     const newUser = new User({

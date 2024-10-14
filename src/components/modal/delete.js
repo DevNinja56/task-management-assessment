@@ -5,11 +5,13 @@ import { useUi } from "@/hooks/useUserInterface";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useTask } from "@/hooks/useTask";
+import { useTranslation } from "react-i18next";
 
 const Delete = () => {
   const { deleteTask } = useTask();
   const { modalState, hideModal } = useUi();
   const { task } = modalState;
+  const { t } = useTranslation("common");
 
   const handleDelete = async () => {
     try {
@@ -37,17 +39,17 @@ const Delete = () => {
       >
         <RiDeleteBinLine className="text-6xl text-red p-3 bg-red/10 rounded-full" />
         <h1 className="text-primary text-xl mb-5">
-          Are you sure you want to delete?
+          {t("confirmation_message")}
         </h1>
         <div className="flex items-center gap-5 w-full">
           <Button
-            text="Cancel"
+            text={t("cancel")}
             className="w-full"
             variant="outline"
             onClick={hideModal}
           />
           <Button
-            text="Delete"
+            text={t("delete")}
             className="w-full"
             animation
             onClick={handleDelete}

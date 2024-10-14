@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import toast, { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 let socket;
 
@@ -15,6 +16,7 @@ function Dashboard() {
   const [isClient, setIsClient] = useState(false);
   const { refetchTask, data: taskData, updateTasks } = useTask();
   const { query } = useSelector((state) => state.searchSlice);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     refetchTask();
@@ -26,7 +28,6 @@ function Dashboard() {
   // Initialize socket connection and listen for notifications
   useEffect(() => {
     if (session) {
-      // Ensure the socket connects to the right endpoint
       const socket = io({
         path: "/api/socketio", // Ensure the path matches your server
       });
@@ -38,7 +39,6 @@ function Dashboard() {
 
         // Listen for task notifications
         socket.on(channelName, (data) => {
-          // Show a toast notification
           toast.success(data.message);
           refetchTask();
         });
@@ -110,7 +110,7 @@ function Dashboard() {
                 >
                   <BoardContainer
                     key={"board--" + label + index}
-                    label={label}
+                    label={t(value)}
                     tasks={filteredTasks.filter(
                       (task) => task.status === value
                     )}

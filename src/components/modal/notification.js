@@ -4,11 +4,15 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import toast, { Toaster } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../languageSwitcher/languageContext";
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation("common");
+  const { direction } = useLanguage();
 
   // Fetch notifications from the API
   const fetchNotifications = async () => {
@@ -66,17 +70,21 @@ const Notification = () => {
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="w-64 md:w-[300px] bg-white rounded-md absolute top-20 right-2 md:right-6 lg:right-8 xl:right-12"
+      className={`w-64 md:w-[300px] bg-white rounded-md absolute top-20 ${
+        direction === "ltr"
+          ? "right-2 md:right-6 lg:right-8 xl:right-12"
+          : "left-2 md:left-6 lg:left-8 xl:left-12"
+      }`}
     >
       <Toaster />
       <div className="p-4 md:p-5 border-b border-lightBlue/20 w-full flex items-center justify-between bg-primary rounded-t-md">
         <h1 className="text-white text-base md:text-xl font-medium lexend-deca-font">
-          Notifications
+          {t("notifications")}
         </h1>
       </div>
       <div className="h-[450px] lg:h-[500px] overflow-y-scroll notification-scroll">
         {loading ? (
-          <p className="text-center">Loading notifications...</p>
+          <p className="text-center">{t("loading_notifications")}</p>
         ) : (
           notifications?.map((item, index) => (
             <div

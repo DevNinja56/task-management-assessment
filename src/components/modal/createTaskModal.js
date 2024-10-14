@@ -12,13 +12,15 @@ import { useUi } from "@/hooks/useUserInterface";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useTask } from "@/hooks/useTask";
-import { addTask, updateTask } from "@/store/slices/task.slice";
-import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../languageSwitcher/languageContext";
 
 const CreateTaskModal = () => {
   const { addNewTask, editTask } = useTask();
   const { hideModal, modalState } = useUi();
   const { task } = modalState;
+  const { t } = useTranslation("common");
+  const { direction } = useLanguage();
 
   const mappedAssignedUsers =
     task?.assignedUsers?.map((item) => item?._id) || [];
@@ -90,7 +92,7 @@ const CreateTaskModal = () => {
 
       if (response && response.status === (task ? 200 : 201)) {
         hideModal();
-        toast.success(task ? "Task Updated" : "Task Created");
+        toast.success(task ? t("task_updated") : t("task_created"));
       }
     } catch (error) {
       toast.error(
@@ -98,15 +100,6 @@ const CreateTaskModal = () => {
       );
     }
   };
-
-  console.log(
-    taskName,
-    assignedUsers,
-    dueDate.startDate,
-    dueDate.endDate,
-    priority,
-    "test"
-  );
 
   return (
     <div className="h-screen w-screen grid place-items-center overflow-auto">
@@ -116,7 +109,7 @@ const CreateTaskModal = () => {
       >
         <div className="p-4 md:p-5 border-b border-lightBlue/20 w-full flex items-center justify-between">
           <h1 className="text-primary text-xl md:text-2xl font-medium lexend-deca-font">
-            {task ? "Update Task" : "Create Task"}
+            {task ? t("update_task") : t("create_task")}
           </h1>
           <RxCross2
             onClick={hideModal}
@@ -125,17 +118,23 @@ const CreateTaskModal = () => {
         </div>
         <div className="p-5 md:p-6 flex flex-col w-full gap-6">
           <h1 className="text-base md:text-lg font-medium lexend-deca-font">
-            Task Name
+            {t("task_name")}
           </h1>
           <div className="relative">
-            <div className="absolute top-2 left-2.5">
+            <div
+              className={`absolute top-2 ${
+                direction === "ltr" ? "left-2.5" : "right-2.5"
+              } `}
+            >
               <ClipBoardIcon />
             </div>
             <textarea
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
-              className="w-full rounded-md min-h-36 bg-lightBlue/15 pt-1.5 pl-9 pr-2.5 text-lightBlue lexend-deca-font outline-none font-light resize-none text-sm md:text-base"
-              placeholder="Task Name"
+              className={`w-full rounded-md min-h-36 bg-lightBlue/15 pt-1.5 pl-9 ${
+                direction === "ltr" ? "pr-2.5" : "pr-10"
+              }  text-lightBlue lexend-deca-font outline-none font-light resize-none text-sm md:text-base`}
+              placeholder={t("task_name")}
             />
           </div>
           <div className="flex items-center flex-wrap gap-3">
@@ -151,7 +150,7 @@ const CreateTaskModal = () => {
               <Button
                 padding="py-1 px-2.5"
                 buttonColor="white"
-                text="Assign"
+                text={t("assign")}
                 radius="rounded-md"
                 className="lexend-deca-font text-xs md:text-sm border border-lightBlue hover:shadow-md"
                 color="lightBlue"
@@ -176,7 +175,7 @@ const CreateTaskModal = () => {
               <Button
                 padding="py-1 px-2.5"
                 buttonColor="white"
-                text="Due Date"
+                text={t("due_date")}
                 radius="rounded-md"
                 className="lexend-deca-font text-xs md:text-sm border border-lightBlue hover:shadow-md"
                 color="lightBlue"
@@ -201,7 +200,7 @@ const CreateTaskModal = () => {
               <Button
                 padding="py-1 px-2.5"
                 buttonColor="white"
-                text="Priority"
+                text={t("priority")}
                 radius="rounded-md"
                 className="lexend-deca-font text-xs md:text-sm border border-lightBlue hover:shadow-md"
                 color="lightBlue"
@@ -224,7 +223,7 @@ const CreateTaskModal = () => {
             radius="rounded-lg"
             color="white"
             className="lexend-deca-font font-light text-xs md:text-sm"
-            text={task ? "Update Task" : "Create Task"}
+            text={task ? t("update_task") : t("create_task")}
             animation
             onClick={createOrUpdateTask}
           />

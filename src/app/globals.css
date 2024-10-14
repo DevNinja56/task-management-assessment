@@ -36,6 +36,22 @@
   }
 }
 
+.animate-arabic-auth-image {
+  animation: arabicAuthImage 10s ease-in-out infinite;
+}
+
+@keyframes arabicAuthImage {
+  0% {
+    right: -383px;
+  }
+  50% {
+    right: -288px;
+  }
+  100% {
+    right: -383px;
+  }
+}
+
 .button-animation::after {
   content: "";
   background: #fff;
@@ -64,6 +80,17 @@
     }
     100% {
       left: -380px;
+    }
+  }
+  @keyframes arabicAuthImage {
+    0% {
+      right: -380px;
+    }
+    50% {
+      right: -320px;
+    }
+    100% {
+      right: -380px;
     }
   }
 }

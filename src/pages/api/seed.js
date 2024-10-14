@@ -17,7 +17,6 @@ export default async function handler(req, res) {
 
     // Create a new admin user if not already present
     const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
-    console.log(hashedPassword);
 
     const adminUser = new User({
       name: process.env.ADMIN_NAME || "Default Admin",

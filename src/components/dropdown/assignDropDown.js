@@ -4,12 +4,14 @@ import { CiSearch } from "react-icons/ci";
 import Image from "next/image";
 import axios from "axios";
 import LoaderSpinner from "../common/loaderSpinner";
+import { useTranslation } from "react-i18next";
 
 const AssignDropDown = ({ onSelect, assignedUsers }) => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUsers, setSelectedUsers] = useState(assignedUsers || []);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -58,7 +60,7 @@ const AssignDropDown = ({ onSelect, assignedUsers }) => {
         <CiSearch />
         <input
           className="outline-none text-xs md:text-sm font-light lexend-deca-font text-lightBlue"
-          placeholder="Search or enter email"
+          placeholder={t("search_or_enter_email")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
